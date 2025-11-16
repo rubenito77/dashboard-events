@@ -1,0 +1,9 @@
+services:
+  dashboard:
+    build: .
+    image: dashboard-eventos:latest
+    container_name: dashboard-eventos-prod
+    network_mode: "host"
+    volumes:
+      - ./reportes:/app/reportes
+      - ./templates:/app/templates

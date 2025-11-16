@@ -1,0 +1,29 @@
+# Dashboard de Análisis de Eventos
+
+Este proyecto es un **dashboard** que analiza la cantidad de eventos obtenidos desde los Kie Servers.
+
+---
+
+## 🧩 Requisitos Previos
+
+1. Clonar o copiar el script `curl-kieservers.sh`.  
+   Este script consulta cada Kie Server para obtener los eventos y guardarlos localmente, permitiendo luego su análisis en el dashboard.
+
+---
+
+## 🚀 Iniciar el Contenedor
+
+Ejecutar los siguientes comandos:
+
+```bash
+docker compose build --no-cache
+docker compose up -d
+
+🌐 Acceso a la Aplicación
+
+La aplicación utiliza la red network host y expone la URL en el puerto 5000:
+
+👉 http://localhost:5000/
+
+
+NOTA: Se debe crear la estructura de directorios para que funcione. 

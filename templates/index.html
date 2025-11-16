@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard KieServer</title>
+  <style>
+    .last-row {
+      background-color: #f0f0f0;
+      font-weight: bold;
+    }
+    .total-row {
+      background-color: #d4edda;
+      font-weight: bold;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #999;
+      padding: 5px 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #eee;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dashboard KieServer</h1>
+
+  <form method="get">
+    <label for="fecha">Fecha:</label>
+    <select name="fecha" id="fecha">
+      <option value="todos">Todos</option>
+      {% for f in fechas_disponibles %}
+      <option value="{{ f }}" {% if f == fecha_seleccionada %}selected{% endif %}>{{ f }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="kieserver">KieServer:</label>
+    <select name="kieserver" id="kieserver">
+      <option value="todos">Todos</option>
+      {% for k in kieservers_disponibles %}
+      <option value="{{ k }}" {% if k == kieserver_seleccionado %}selected{% endif %}>{{ k }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit">Filtrar</button>
+  </form>
+
+  <hr>
+
+  <table>
+    <thead>
+      <tr>
+        {% if data and 'Fecha_str' in data[0] %}
+        <th>Fecha</th>
+        {% endif %}
+        <th>KieServer</th>
+        <th>Hora</th>
+        {% for col in numeric_cols %}
+        <th>{{ col }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in data %}
+        {% set is_total = row['Fuente'] == 'TOTAL' %}
+        {% set is_last = False %}
+        {% if not is_total and fecha_seleccionada and fecha_seleccionada != "todos" and (not kieserver_seleccionado or kieserver_seleccionado == "todos") %}
+          {% set next_row = data[loop.index] if loop.index < data|length else None %}
+          {% if not next_row or next_row['Fuente'] != row['Fuente'] %}
+            {% set is_last = True %}
+          {% endif %}
+        {% endif %}
+        <tr class="{% if is_total %}total-row{% elif is_last %}last-row{% endif %}">
+          {% if 'Fecha_str' in row %}
+          <td>{{ row['Fecha_str'] }}</td>
+          {% endif %}
+          <td>{{ row['Fuente'] }}</td>
+          <td>{{ row['Hora_str'] }}</td>
+          {% for col in numeric_cols %}
+          <td>{{ row[col] }}</td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>
+
